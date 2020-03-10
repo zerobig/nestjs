@@ -180,15 +180,21 @@ export class AmqpConnection {
   }
 
   public async request<T extends {}>(
-    requestOptions: RequestOptions
+    requestOptions: RequestOptions<any>
   ): Promise<T> {
+    return this.requestTypedPayload<any, T>(requestOptions);
+  }
+
+  public async requestTypedPayload<T extends {}, TT extends {}>(
+    requestOptions: RequestOptions<T>
+  ): Promise<TT> {
     const correlationId = requestOptions.correlationId || uuid.v4();
     const timeout = requestOptions.timeout || this.config.defaultRpcTimeout;
     const payload = requestOptions.payload || {};
 
     const response$ = this.messageSubject.pipe(
       filter(x => x.correlationId === correlationId),
-      map(x => x.message as T),
+      map(x => x.message as TT),
       first()
     );
 

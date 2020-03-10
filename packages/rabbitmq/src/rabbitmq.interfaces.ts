@@ -12,12 +12,12 @@ export interface MessageOptions {
   routingKey: string;
 }
 
-export interface RequestOptions {
+export interface RequestOptions<T> {
   exchange: string;
   routingKey: string;
   correlationId?: string;
   timeout?: number;
-  payload?: any;
+  payload?: T;
 }
 
 export interface QueueOptions {
